@@ -33,7 +33,7 @@ model {
   
   // calculate likelihood for data
   for(i in 1:N){
-    ypred[i] = (Linf-Lm[i]) * (1-exp(-K*dt[i]));
+    ypred[i] = Lm[i] + (Linf-Lm[i]) * (1-exp(-K*dt[i]));
   }
   Lr~normal(ypred, sigma);
 }
@@ -41,6 +41,6 @@ model {
 generated quantities { // predicted values for inspecting model fit
   vector[N] predy;
   for(i in 1:N){
-    predy[i] = normal_rng((Linf-Lm[i]) * (1-exp(-K*dt[i])), sigma);
+    predy[i] = normal_rng(Lm[i] + (Linf-Lm[i]) * (1-exp(-K*dt[i])), sigma);
   }
 }
