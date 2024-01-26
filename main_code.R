@@ -44,6 +44,7 @@ data_listVB <- list(
   sdK = sd_K,
   mt0 = mean_t0,
   sdt0 = sd_t0)
+
 # Initial values for MCMC chains
 init_listVB <- lapply(1:4, function(i) {
   list(logLinf = log(rnorm(1, max(data_listVB$TL), 1)),
@@ -53,7 +54,7 @@ init_listVB <- lapply(1:4, function(i) {
 })
 
 # Compile nd fit model to stan
-satnfit_vBert <- stan(file = "Bayesian_vBGM.stan",
+stanfit_vBert <- stan(file = "Bayesian_vBGM.stan",
                       data = data_listVB,
                       init = init_listVB,
                       chains = 4,
@@ -65,12 +66,14 @@ satnfit_vBert <- stan(file = "Bayesian_vBGM.stan",
 stanfit_vBert
 
 # View visual diagnostics for the Fabens model
-traceplot(stanfit_Fabens, pars = c("Linf", "K", "t0", "sigma")) +
+traceplot(stanfit_vBert, pars = c("Linf", "K", "t0", "sigma")) +
   ggtitle("Traceplot of the von Bertalanffy growth model")
 
-stan_dens(stanfit_Fabens, pars = c("Linf", "K", "t0", "sigma"))
+stan_dens(stanfit_vBert, pars = c("Linf", "K", "t0", "sigma"))
 
-# Get Credible Intervals for Linf and K
+pairs(stanfit_vBert, pars = c("Linf", "K", "t0", "sigma"))
+
+# Get Credible Intervals for Linf, K, and t0
 post_vB <- as.data.frame(stanfit_vBert) %>% 
   summarise(Lci_lo = quantile(Linf, probs = .05),
             Lci_hi = quantile(Linf, probs = .95),
@@ -117,9 +120,13 @@ traceplot(stanfit_Fabens, pars = c("Linf", "K", "sigma")) +
 
 stan_dens(stanfit_Fabens, pars = c("Linf", "K", "sigma"))
 
+pairs(stanfit_Fabens, pars = c("Linf", "K", "sigma"))
+
 # Get Credible Intervals for Linf and K
 post_Fabens <- as.data.frame(stanfit_Fabens) %>% 
   summarise(Lci_lo = quantile(Linf, probs = .05),
             Lci_hi = quantile(Linf, probs = .95),
             Kci_lo = quantile(K, probs = .05),
             Kci_hi = quantile(K, probs = .95))
+
+## ELEFAN with grayling data ----
