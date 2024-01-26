@@ -37,7 +37,9 @@ model {
   for(i in 1:N){
     ypred[i] = Linf * (1-exp(-K * (Age[i]-t0)));
   }
+  TL~normal(ypred, sigma);
 }
+
 
 generated quantities {
   vector[N] predy;
