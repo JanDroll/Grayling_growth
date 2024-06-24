@@ -76,6 +76,7 @@ MR_plot <- ggplot(mr_g, aes(x = dt, y = TL, col = ID)) +
 d_plot <- (MR_plot | AL_plot) / lfq_plot + plot_annotation(tag_levels = "a")
 ggsave(d_plot, filename = "d_plot.png", height = 25, width = 35, units = "cm", dpi = 600)
 
+# Plots showing the results of the parameters estimated by the different growth models
 Linf_plot <- Growth_param %>%
   mutate(Uncertainty = fct_relevel(Uncertainty, "Credible Interval", "Confidence Interval")) %>% 
   ggplot(aes(x = Method, y = Linf, shape = Type)) +
