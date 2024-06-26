@@ -194,14 +194,38 @@ gray_elefan.ga <- ELEFAN_GA(lfq_new,
 
 unlist(gray_elefan.ga$par)
 
+# ELEFAN with genetic algorithm and bootstraped CIs
+gray_elefan.ga.boot <- fishboot::ELEFAN_GA_boot(lfq_new,
+                         seasonalised = FALSE,
+                         low_par = list(Linf = 40, K = 0.1, t_anchor = 0, ts = 0, C = 0),
+                         up_par = list(Linf = 60, K = 0.9, t_anchor = 1, ts = 1, C = 1),
+                         popSize = 100,
+                         maxiter = 100,
+                         pmutation = 0.2,
+                         run = 30,
+                         MA = 7,
+                         parallel = TRUE,
+                         no_cores = 10)
+
+univariate_density(gray_elefan.ga.boot, use_hist = TRUE)
+LinfK_scatterhist(gray_elefan.ga.boot)
+
+mean(gray_elefan.ga.boot$bootRaw$Linf)
+quantile(gray_elefan.ga.boot$bootRaw$Linf, 0.95)
+quantile(gray_elefan.ga.boot$bootRaw$Linf, 0.05)
+
+mean(gray_elefan.ga.boot$bootRaw$K)
+quantile(gray_elefan.ga.boot$bootRaw$K, 0.95)
+quantile(gray_elefan.ga.boot$bootRaw$K, 0.05)
+
 ## Results table ----
 Growth_param <- tibble(Method = c("von Bertalanffy", "von Bertalanffy", "Fabens", "Fabens", "ELEFAN"),
-                       Linf = c(519.56, 3785.10, 536.82, 538.85, 430.48),
-                       L_up = c(586.85, 10137.64, 586.37, 678.30, 500.00),
-                       L_low = c(460.88, 2021.51, 493.91, 474.32, 360.00),
+                       Linf = c(519.56, 3785.10, 536.82, 538.85, 436.50),
+                       L_up = c(586.85, 10137.64, 586.37, 678.30, 470.12),
+                       L_low = c(460.88, 2021.51, 493.91, 474.32, 410.40),
                        K = c(0.21, 0.01, 0.38, 0.37, 0.12),
-                       K_up = c(0.27, 0.03, 0.45, 0.49, 0.16),
-                       K_low = c(0.17, 0.005, 0.31, 0.25, 0.10),
+                       K_up = c(0.27, 0.03, 0.45, 0.49, 0.17),
+                       K_low = c(0.17, 0.005, 0.31, 0.25, 0.11),
                        Type = c("Bayesian", "Frequentist", "Bayesian", "Frequentist", "Frequentist"),
                        Uncertainty = c("Credible Interval", "Confidence Interval", "Credible Interval", "Confidence Interval", "Confidence Interval"))
 
