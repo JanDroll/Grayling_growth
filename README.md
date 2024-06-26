@@ -1,1 +1,1 @@
-# Grayling_growth
+Code to recreate the analysis and figures used in the puplication "Growth of the European grayling (Thymallus thymallus L.) in a large alpine river based on Mark-and-Recapture and Length-Frequency data".
